@@ -1,0 +1,21 @@
+.wrapper {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+}
+
+.flex-container>div {
+    margin: 10px;
+    padding: 10px;
+    font-size: 30px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.center {
+    text-align: center;
+}
