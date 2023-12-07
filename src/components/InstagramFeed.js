@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-const API_URL = "http://local.m246p3/graphql";
-const MEDIA_BASE_URL = "http://local.m246p3/media/instagram/";
+import { query } from 'gql-query-builder';
 
 export default function InstagramFeed() {
     const [instagramFeedData, setInstagramFeedData] = useState({});
@@ -17,7 +15,7 @@ export default function InstagramFeed() {
             return (
                 <div key={post.insta_post_id}>
                     <a href={post.insta_post_url}  >
-                        <img width={300} height={300} src={MEDIA_BASE_URL + post.media_url} alt="instagram post" ></img>
+                        <img width={300} height={300} src={process.env.REACT_APP_MEDIA_BASE_URL + post.media_url} alt="instagram post" ></img>
                     </a>
                 </div>
             );
@@ -25,25 +23,26 @@ export default function InstagramFeed() {
     }
 
     function getInstagramFeedData(setInstagramFeedData) {
+        const graphqlQuery = query({
+            operation: "instagramfeed",
+            fields: [
+                "entity_id",
+                "insta_post_id",
+                "media_type",
+                "media_url",
+                "insta_post_url",
+                "created_at",
+                "insta_updated_at"
+            ]
+        });
+
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query: `query {
-                    instagramfeed {
-                        entity_id
-                        insta_post_id
-                        media_type
-                        media_url
-                        insta_post_url
-                        created_at
-                        insta_updated_at
-                    }
-                }`
-            })
+            body: JSON.stringify(graphqlQuery)
         }
 
-        fetch(API_URL, options).then(
+        fetch(process.env.REACT_APP_API_URL, options).then(
             result => result.json()
         ).then(
             response => setInstagramFeedData(response)
